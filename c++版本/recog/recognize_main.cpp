@@ -1,3 +1,10 @@
+/*************************************************************************
+    > File Name: recgnize_main.cpp
+    > Author: jiang
+    > Mail: 760021776@qq.com 
+    > Created Time: 2019å¹´04æœˆ02æ—¥ æ˜ŸæœŸäºŒ 10æ—¶56åˆ†12ç§’
+ ************************************************************************/
+
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #include <fstream>
@@ -17,42 +24,42 @@ using namespace cv;
 using namespace std;
 
 string filepath = "trainer2.yml";
-string haar_face_datapath = "haarcascade_frontalface_alt.xml";//ÈËÁ³¼ì²â·ÖÀàÆ÷Î»ÖÃ
-string listpath = "train_list.csv";//csvÎÄ¼şÎ»ÖÃ£¨Í¼Æ¬Â·¾¶ºÍ±êÇ©×é³ÉµÄÎÄ±¾£©  //train_list
+string haar_face_datapath = "haarcascade_frontalface_alt.xml";//äººè„¸æ£€æµ‹åˆ†ç±»å™¨ä½ç½®
+string listpath = "train_list.csv";//csvæ–‡ä»¶ä½ç½®ï¼ˆå›¾ç‰‡è·¯å¾„å’Œæ ‡ç­¾ç»„æˆçš„æ–‡æœ¬ï¼‰  //train_list
 
 
-//µ÷ÓÃpy¿âÉú³É csvÎÄ¼ş
+//è°ƒç”¨pyåº“ç”Ÿæˆ csvæ–‡ä»¶
 void runPy_getcsv()
 {
 	Py_Initialize();
-	//Ö±½ÓÔËĞĞpython´úÂë
+	//ç›´æ¥è¿è¡Œpythonä»£ç 
 	PyRun_SimpleString("import get_csv");
-	//ÒıÈëÄ£¿é£¨get_csv.py£©
+	//å¼•å…¥æ¨¡å—ï¼ˆget_csv.pyï¼‰
 	PyRun_SimpleString("get_csv.get_csv()");
-	Py_Finalize(); //½áÊøpython½âÊÍÆ÷£¬ÊÍ·Å×ÊÔ´
+	Py_Finalize(); //ç»“æŸpythonè§£é‡Šå™¨ï¼Œé‡Šæ”¾èµ„æº
 }
 
 /*
-	ÈËÁ³¼ì²â£¬±£´æÑù±¾¡£
-	ÊäÈë²ÎÊı£ºÑù±¾ÊıÁ¿
+	äººè„¸æ£€æµ‹ï¼Œä¿å­˜æ ·æœ¬ã€‚
+	è¾“å…¥å‚æ•°ï¼šæ ·æœ¬æ•°é‡
 */
 int save_FaceSamples(int NUMS)
 {
 	string face_id;
-	char s[50];//×Ö·ûÊı×é£¬ÓÃÓÚ´æ·Å×Ö·û´®µÄÃ¿Ò»¸ö×Ö·û
+	char s[50];//å­—ç¬¦æ•°ç»„ï¼Œç”¨äºå­˜æ”¾å­—ç¬¦ä¸²çš„æ¯ä¸€ä¸ªå­—ç¬¦
 	cout << "Please input a name" << endl;
-	
-	cin.get(s,50);           //ÖÕ¶ËÊäÈëÑù±¾ÎÄ¼ş¼Ğ
-	face_id = s;//ÈËµÄÃû×Ö
-	cout << face_id << endl;
-	printf ("\n ¿´×ÅÉãÏñÍ·£¬²¢µÈ´ı ...");
 
-	VideoCapture capture(0);//´ò¿ªÉãÏñÍ·
+	cin.get(s,50);           //ç»ˆç«¯è¾“å…¥æ ·æœ¬æ–‡ä»¶å¤¹
+	face_id = s;//äººçš„åå­—
+	cout << face_id << endl;
+	printf ("\n çœ‹ç€æ‘„åƒå¤´ï¼Œå¹¶ç­‰å¾… ...");
+
+	VideoCapture capture(0);//æ‰“å¼€æ‘„åƒå¤´
 
 	//Size S = Size((int)capture.get(CAP_PROP_FRAME_WIDTH), (int)capture.get(CAP_PROP_FRAME_HEIGHT));
 	//int fps = capture.get(CAP_PROP_FPS);
 
-	//¼ÓÔØÈËÁ³¼ì²â·ÖÀàÆ÷
+	//åŠ è½½äººè„¸æ£€æµ‹åˆ†ç±»å™¨
 	CascadeClassifier faceDetector;
 	faceDetector.load(haar_face_datapath);
 
@@ -61,31 +68,31 @@ int save_FaceSamples(int NUMS)
 	vector<Rect>faces;
 	int count = 0;
 	int	num = 0;
-	 
-	//¼ì²âÈËÁ³²¢½«ÈËÁ³×÷ÎªÑù±¾´æÈë
+
+	//æ£€æµ‹äººè„¸å¹¶å°†äººè„¸ä½œä¸ºæ ·æœ¬å­˜å…¥
 	while (1)
 	{
 		 capture.read(frame);
-		 faceDetector.detectMultiScale(frame, faces,1.2,2, 0 | CV_HAAR_SCALE_IMAGE, cv::Size(80, 80));         //¾­²âÊÔ£¬×î¼Ñ²ÎÊı
-		 for (int i = 0; i < faces.size(); i++) 
-		 {	
+		 faceDetector.detectMultiScale(frame, faces,1.2,2, 0 | CV_HAAR_SCALE_IMAGE, cv::Size(80, 80));         //ç»æµ‹è¯•ï¼Œæœ€ä½³å‚æ•°
+		 for (int i = 0; i < faces.size(); i++)
+		 {
 			 if (count % 10 == 0)
 			 {
 				 num++;
 				 Mat dst;
 				 resize(frame(faces[i]), dst, Size(100, 100));
 				 cvtColor(dst, dst, COLOR_BGR2GRAY);
-				 string path = "../face/" + face_id + "/";	//ĞÂÎÄ¼ş¼ĞÂ·¾¶
-				 mkdir(path.c_str(),S_IRWXU);//´´½¨ÈËÃûÎªÎÄ¼şÃûµÄĞÂÎÄ¼ş¼Ğ
-				 imwrite( path + face_id +"_"+ to_string(num) + ".jpg",dst);	//ÔÚ¶ÔÓ¦ÎÄ¼ş¼ĞÖĞĞ´Èë¶ÔÓ¦ÈËµÄÍ¼Æ¬£¨Èç£ºÃûÎª¡®Ğ¡Ã÷¡¯µÄÎÄ¼ş¼ĞÖĞ´æÈëĞ¡Ã÷µÄÍ¼Æ¬£©
+				 string path = "../face/" + face_id + "/";	//æ–°æ–‡ä»¶å¤¹è·¯å¾„
+				 mkdir(path.c_str(),S_IRWXU);//åˆ›å»ºäººåä¸ºæ–‡ä»¶åçš„æ–°æ–‡ä»¶å¤¹
+				 imwrite( path + face_id +"_"+ to_string(num) + ".jpg",dst);	//åœ¨å¯¹åº”æ–‡ä»¶å¤¹ä¸­å†™å…¥å¯¹åº”äººçš„å›¾ç‰‡ï¼ˆå¦‚ï¼šåä¸ºâ€˜å°æ˜â€™çš„æ–‡ä»¶å¤¹ä¸­å­˜å…¥å°æ˜çš„å›¾ç‰‡ï¼‰
 			 }
-			 rectangle(frame, faces[i], Scalar(0, 0, 255), 2, 8, 0);//¿ò³öÈËÁ³
+			 rectangle(frame, faces[i], Scalar(0, 0, 255), 2, 8, 0);//æ¡†å‡ºäººè„¸
 			 count++;
 		 }
-		flip(frame, frame, 1);//¾µÏñ·­×ª
-		imshow("window", frame);//ÏÔÊ¾µÄ´°¿Ú
+		flip(frame, frame, 1);//é•œåƒç¿»è½¬
+		imshow("window", frame);//æ˜¾ç¤ºçš„çª—å£
 		char c = waitKey(1);
-		if (c == 27)//Esc¼üÍË³ö
+		if (c == 27)//Escé”®é€€å‡º
 		{
 			break;
 		}
@@ -103,46 +110,46 @@ int save_FaceSamples(int NUMS)
 void get_csvfile()
 {
 	//ofstream outFile;
-	//outFile.open(listpath, ios::out); // ´ò¿ªÄ£Ê½¿ÉÊ¡ÂÔ
+	//outFile.open(listpath, ios::out); // æ‰“å¼€æ¨¡å¼å¯çœç•¥
 
- 	DIR * dir; 
-	struct dirent * ptr; 
-	char file_list[100][40]; 
-	int i=0; 
-	char srcFile1[1][100]; 
-	string rootdirPath = "../face/"; 
-	string x,dirPath; 
-	dir = opendir((char *)rootdirPath.c_str()); //´ò¿ªÒ»¸öÄ¿Â¼ 
+ 	DIR * dir;
+	struct dirent * ptr;
+	char file_list[100][40];
+	int i=0;
+	char srcFile1[1][100];
+	string rootdirPath = "../face/";
+	string x,dirPath;
+	dir = opendir((char *)rootdirPath.c_str()); //æ‰“å¼€ä¸€ä¸ªç›®å½•
 	char **dir_name;
-	while((ptr = readdir(dir)) != NULL) //Ñ­»·¶ÁÈ¡Ä¿Â¼Êı¾İ 
-	{ 
-		printf("d_name : %s\n", ptr->d_name); //Êä³öÎÄ¼şÃû 
-		x=ptr->d_name; 
-		dirPath = rootdirPath + x; 
-		printf("d_name : %s\n", dirPath.c_str()); //Êä³öÎÄ¼ş¾ø¶ÔÂ·¾¶ //        
-		x = dirPath.c_str(); 
-		strcpy(srcFile1[i],dirPath.c_str()); //´æ´¢µ½Êı×é 
-		if ( ++i>=100 ) 
+	while((ptr = readdir(dir)) != NULL) //å¾ªç¯è¯»å–ç›®å½•æ•°æ®
+	{
+		printf("d_name : %s\n", ptr->d_name); //è¾“å‡ºæ–‡ä»¶å
+		x=ptr->d_name;
+		dirPath = rootdirPath + x;
+		printf("d_name : %s\n", dirPath.c_str()); //è¾“å‡ºæ–‡ä»¶ç»å¯¹è·¯å¾„ //
+		x = dirPath.c_str();
+		strcpy(srcFile1[i],dirPath.c_str()); //å­˜å‚¨åˆ°æ•°ç»„
+		if ( ++i>=100 )
 		break;
 	}
 	//outFile.close();
 }
 
 /*
-// io.h ²»ÄÜÓÃ
+// io.h ä¸èƒ½ç”¨
 void getFiles(string path, vector<string>& files)
 {
-    //ÎÄ¼ş¾ä±ú  
-    long long hFile = 0;//Õâ¸öµØ·½ĞèÒªÌØ±ğ×¢Òâ£¬win10ÓÃ»§±ØĞëÓÃlong long ÀàĞÍ£¬win7¿ÉÒÔÓÃlongÀàĞÍ
-    //ÎÄ¼şĞÅÏ¢  
+    //æ–‡ä»¶å¥æŸ„
+    long long hFile = 0;//è¿™ä¸ªåœ°æ–¹éœ€è¦ç‰¹åˆ«æ³¨æ„ï¼Œwin10ç”¨æˆ·å¿…é¡»ç”¨long long ç±»å‹ï¼Œwin7å¯ä»¥ç”¨longç±»å‹
+    //æ–‡ä»¶ä¿¡æ¯
     struct _finddata_t fileinfo;
     string p;
     if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1)
     {
         do
         {
-            //Èç¹ûÊÇÄ¿Â¼,µü´úÖ®  
-            //Èç¹û²»ÊÇ,¼ÓÈëÁĞ±í  
+            //å¦‚æœæ˜¯ç›®å½•,è¿­ä»£ä¹‹
+            //å¦‚æœä¸æ˜¯,åŠ å…¥åˆ—è¡¨
             if ((fileinfo.attrib &  _A_SUBDIR))
             {
                 if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
@@ -161,26 +168,26 @@ void getFiles(string path, vector<string>& files)
 
 
 /*
-	·µ»Ø 0 £¬²»ÑµÁ·£¬Ö±½Ó¶ÁÈ¡³É¹¦£»
-	·µ»Ø 1 £¬½øĞĞÑµÁ·£¬ÔÙÔ¤²â¡£
-	½øĞĞÑµÁ·Ö®Ç°ĞèÒªÏÈÉ¾³ıÒÑ´æÔÚµÄ xml ÎÄ¼ş£¬»òÕß¸ÄÃû¡£
+	è¿”å› 0 ï¼Œä¸è®­ç»ƒï¼Œç›´æ¥è¯»å–æˆåŠŸï¼›
+	è¿”å› 1 ï¼Œè¿›è¡Œè®­ç»ƒï¼Œå†é¢„æµ‹ã€‚
+	è¿›è¡Œè®­ç»ƒä¹‹å‰éœ€è¦å…ˆåˆ é™¤å·²å­˜åœ¨çš„ xml æ–‡ä»¶ï¼Œæˆ–è€…æ”¹åã€‚
 */
 bool start_train()
 {
-	fstream xmlfile; 
-	xmlfile.open(filepath, ios::in);                 //¸ù¾İ×Ô¼ºĞèÒª½øĞĞÊÊµ±µÄÑ¡È¡ ios::in|ios::out|ios::binary
-	if (xmlfile)                  //´æÔÚÑµÁ·ºÃµÄxml
+	fstream xmlfile;
+	xmlfile.open(filepath, ios::in);                 //æ ¹æ®è‡ªå·±éœ€è¦è¿›è¡Œé€‚å½“çš„é€‰å– ios::in|ios::out|ios::binary
+	if (xmlfile)                  //å­˜åœ¨è®­ç»ƒå¥½çš„xml
 	{
 		std::cout <<"xml is existed" <<std::endl;
 		xmlfile.close();
 		return 0;
 	}
-	
+
 	ifstream file(listpath.c_str(), ifstream::in);
-	if (!file) 
-	{ 
-		printf("could not load file correctly...\n"); 
-		return -1; 
+	if (!file)
+	{
+		printf("could not load file correctly...\n");
+		return -1;
 	}
 
 	string line, path, classlabel;
@@ -193,10 +200,10 @@ bool start_train()
 		getline(file, line);
 		//cout << line << endl;
 		stringstream lines(line);
-		getline(lines, path, separator);//»ñÈ¡Ñù±¾Í¼Æ¬Â·¾¶
-		getline(lines, classlabel);//»ñÈ¡±êÇ©
+		getline(lines, path, separator);//è·å–æ ·æœ¬å›¾ç‰‡è·¯å¾„
+		getline(lines, classlabel);//è·å–æ ‡ç­¾
 		//printf("%s---\n", classlabel.c_str());
-	
+
 		if (!path.empty() && !classlabel.empty())
 		{
 			//printf("ok:::path:%s\n", path.c_str());
@@ -205,41 +212,41 @@ bool start_train()
 				cout << "err1"<<endl;
 				break;
 			}
-			images.push_back(image_one);//Ñù±¾Í¼Æ¬·ÅÈëÈİÆ÷
-			labels.push_back(atoi(classlabel.c_str()));//±êÇ©·ÅÈëÈİÆ÷
+			images.push_back(image_one);//æ ·æœ¬å›¾ç‰‡æ”¾å…¥å®¹å™¨
+			labels.push_back(atoi(classlabel.c_str()));//æ ‡ç­¾æ”¾å…¥å®¹å™¨
 		}
 	}
 
-	if (images.size() < 1 || labels.size() < 1) 
+	if (images.size() < 1 || labels.size() < 1)
 	{
-		printf("invalid image path...\n"); 
-		return -1; 
+		printf("invalid image path...\n");
+		return -1;
 	}
 
-	//ÑµÁ·Ä£ĞÍ
+	//è®­ç»ƒæ¨¡å‹
 	Ptr<FaceRecognizer> model = createEigenFaceRecognizer();
 	model->train(images, labels);
 	model->save(filepath);
-	
+
 	xmlfile.close();
 	return 1;
 }
 /*
-	ÈËÁ³Ê¶±ğÔ¤²âº¯Êı
+	äººè„¸è¯†åˆ«é¢„æµ‹å‡½æ•°
 */
 int start_predict()
 {
 	bool flag_train = 0;
 	flag_train = start_train();
-	//Ê¶±ğ·ÖÀàÆ÷
+	//è¯†åˆ«åˆ†ç±»å™¨
 	Ptr<FaceRecognizer> model = createEigenFaceRecognizer();
 	model->load(filepath);
 
-	//¼ÓÔØ¼ì²â·ÖÀàÆ÷
+	//åŠ è½½æ£€æµ‹åˆ†ç±»å™¨
 	CascadeClassifier faceDetector;
 	faceDetector.load(haar_face_datapath);
 
-	VideoCapture capture(0);//´ò¿ªÉãÏñÍ·
+	VideoCapture capture(0);//æ‰“å¼€æ‘„åƒå¤´
 	if (!capture.isOpened())
 	{
 		printf("could not open camera...\n");
@@ -247,34 +254,34 @@ int start_predict()
 	}
 	Mat frame;
 	vector<Rect>faces;
-	namedWindow("face-recognition", WINDOW_AUTOSIZE);//Í¼Æ¬ÏÔÊ¾µÄ´°¿Ú
+	namedWindow("face-recognition", WINDOW_AUTOSIZE);//å›¾ç‰‡æ˜¾ç¤ºçš„çª—å£
 	while (1)
 	{
-		capture.read(frame);//ÉãÏñÍ·»ñÈ¡Í¼Æ¬
+		capture.read(frame);//æ‘„åƒå¤´è·å–å›¾ç‰‡
 
-		flip(frame, frame, 1);//¾µÏñ·­×ª
+		flip(frame, frame, 1);//é•œåƒç¿»è½¬
 		faceDetector.detectMultiScale(frame, faces, 1.08, 3, 0, Size(50, 60), Size(380, 400));
 		for (int i = 0; i < faces.size(); i++)
 		{
 			Mat dst;
-			resize(frame(faces[i]), dst, Size(100, 100));//¹æ·¶³ß´çÓÃÓÚºóĞøÈËÁ³Ê¶±ğ
-			cvtColor(dst, dst, COLOR_BGR2GRAY);//»Ò¶È»¯
-			rectangle(frame, faces[i], Scalar(0, 255, 0), 2, 8, 0);//ÔÚ´°¿ÚÖĞ¿ò³öÈËÁ³
+			resize(frame(faces[i]), dst, Size(100, 100));//è§„èŒƒå°ºå¯¸ç”¨äºåç»­äººè„¸è¯†åˆ«
+			cvtColor(dst, dst, COLOR_BGR2GRAY);//ç°åº¦åŒ–
+			rectangle(frame, faces[i], Scalar(0, 255, 0), 2, 8, 0);//åœ¨çª—å£ä¸­æ¡†å‡ºäººè„¸
 			int predictedLabel = -1;
 			double confidence = 0.0;
-		    	model->predict(dst, predictedLabel, confidence);//¶Ô´°¿ÚÖĞÈËÁ³½øĞĞÊ¶±ğ£¬¸ø³öÔ¤²â±êÇ©²¢¸³ÓÚpredictedLabel
-			string result_message = format("Predicted number = %d / confidence = %2f.", predictedLabel, confidence);//²é¿´±êÇ©ºÍÖÃĞÅ¶È
+		    	model->predict(dst, predictedLabel, confidence);//å¯¹çª—å£ä¸­äººè„¸è¿›è¡Œè¯†åˆ«ï¼Œç»™å‡ºé¢„æµ‹æ ‡ç­¾å¹¶èµ‹äºpredictedLabel
+			string result_message = format("Predicted number = %d / confidence = %2f.", predictedLabel, confidence);//æŸ¥çœ‹æ ‡ç­¾å’Œç½®ä¿¡åº¦
 			cout << result_message << endl;
-		
-			//²»Í¬ÈË¶ÔÓ¦µÄ²»Í¬±êÇ©
+
+			//ä¸åŒäººå¯¹åº”çš„ä¸åŒæ ‡ç­¾
 		if(confidence > 3100){
 			predictedLabel = 100;
 		}
-		
+
 	     	switch (predictedLabel)
 			{
 				case 0:
-					putText(frame, "linxi", faces[i].tl(), FONT_HERSHEY_PLAIN, 1.0, Scalar(0, 255, 0), 1, 8);//ÔÚÈËÁ³ÅÔÏÔÊ¾ÈËÃû
+					putText(frame, "linxi", faces[i].tl(), FONT_HERSHEY_PLAIN, 1.0, Scalar(0, 255, 0), 1, 8);//åœ¨äººè„¸æ—æ˜¾ç¤ºäººå
 					break;
 				case 1:
 					putText(frame, "youjiang", faces[i].tl(), FONT_HERSHEY_PLAIN, 1.0, Scalar(0, 255, 0), 1, 8);
@@ -282,9 +289,9 @@ int start_predict()
 				default:
 					putText(frame, "unknown", faces[i].tl(), FONT_HERSHEY_PLAIN, 1.0, Scalar(0, 255, 0), 1, 8);
 					break;
-					
+
 			}
-			
+
 		}
 		imshow("face-recognition", frame);
 		char c = waitKey(1);
@@ -311,4 +318,5 @@ int main(int argc, char**argv)
 	}
 	return 0;
 }
+
 
