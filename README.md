@@ -10,7 +10,7 @@
 
 7.18
 python利用dlib实现识别。
-![image text](https://github.com/Youjiangbaba/FaceRecognizition/tree/master/live_face_recog/blob/master/doge_gif/show.gif)
+![image text](https://github.com/Youjiangbaba/FaceRecognizition/blob/master/c%2B%2B%E7%89%88%E6%9C%AC/test7-18.gif)
 
 
 2019.12.6
@@ -35,4 +35,4 @@ python利用dlib实现识别。
                 face_rects =  convert_rect(faces)
 ```
 **眨眼、张嘴对比，每帧关键点位置与前一秒所有帧进行对比，差异较大则判为活体。
-![image text](https://github.com/Youjiangbaba/FaceRecognizition/tree/master/live_face_recog/blob/master/doge_gif/show.gif)
+![image text](https://github.com/Youjiangbaba/FaceRecognizition/blob/master/live_face_recog/img/show/show.gif)
